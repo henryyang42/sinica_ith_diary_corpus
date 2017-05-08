@@ -1,0 +1,78 @@
+<html>
+
+<head>
+  <title>楊基振日記</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<style type="text/css">
+.match {
+  background: yellow;
+}
+</style>
+
+<body>
+  <div ng-app="diary" ng-controller="diaryController">
+    <h1>楊基振日記</h1>
+    <div class="input-group">
+        <span class="input-group-addon" id="sizing-addon">Filter</span>
+        <input type="text" class="form-control" placeholder="Type the terms you want to search separate by space" aria-describedby="sizing-addon" ng-model="search">
+    </div>
+    <br>
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th class="col-xs-2">Title</th>
+          <th class="col-xs-10">Content ({{ filtered.length }})</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="d in filtered = (data | filter:hasTerm(search))">
+          <td>{{d.title}}</td>
+          <td ng-bind-html="d.content | highlight:search"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+<script type="text/javascript">
+url = 'https://gist.githubusercontent.com/henryyang42/75022367f9757d9e130c9543c8ebd6d9/raw/7b6e064bc9520bd36674dbf507a35483853cd1f0/diary.json'
+var app = angular.module('diary', []);
+app.controller('diaryController', function($scope) {
+  $scope.search = '來訪';
+  $.get(url, function(json) {
+    console.log('Diary loaded.');
+    $scope.data = JSON.parse(json);
+    $scope.$apply();
+  });
+  $scope.hasTerm = function(terms) {
+    terms = terms.split(' ');
+    return function(data) {
+      for (i in terms) {
+        if (data.content.includes(terms[i]))
+          return true;
+      }
+      return false;
+    }
+  }
+});
+
+app.filter('highlight', function($sce) {
+  return function(str, termsToHighlight) {
+    if (!termsToHighlight) {
+      return $sce.trustAsHtml(str);
+    }
+    // Split terms by space
+    termsToHighlight = termsToHighlight.split(' ');
+    // Regex to simultaneously replace terms
+    var regex = new RegExp('(' + termsToHighlight.join('|') + ')', 'g');
+    return $sce.trustAsHtml(str.replace(regex, '<span class="match">$&</span>'));
+  };
+});
+</script>
+
+</html>

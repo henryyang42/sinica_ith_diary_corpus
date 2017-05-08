@@ -1,5 +1,6 @@
-# Mac
+# Static
 .DS_Store
+*.txt
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
