@@ -1,6 +1,9 @@
 # Crawled Diary Corpus from Taiwan Diary Knowledge-base,
 # Institute of Taiwan History, Academia Sinica 
 
+## Simple Demo
+[楊基振日記](https://henryyang42.github.io/sinica_ith_diary_corpus/%E6%A5%8A%E5%9F%BA%E6%8C%AF%E6%97%A5%E8%A8%98.html)
+
 ## Introduction
 
 We collected 32502 diary articles that date back to 1900s-1970s from [Taiwan Diary Knowledge-base](http://taco.ith.sinica.edu.tw/tdk/) (TDK). Our corpus consists of diaries from 9 people written in aforementioned period.
